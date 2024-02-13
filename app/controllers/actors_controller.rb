@@ -6,11 +6,46 @@ class ActorsController < ApplicationController
     render({ :template => "actor_templates/index" })
   end
 
+  def modify
+    a_id = params.fetch("an_id")
+    matching_records = Actor.where({id: a_id})
+    the_actor = matching_records.at(0)
+    the_actor.name = params.fetch("actor_name")
+    the_actor.dob = params.fetch("actor_dob")
+    the_actor.bio = params.fetch("actor_bio")
+    the_actor.image = params.fetch("the_image")
+
+    the_actor.save
+    
+    redirect_to("/actors/#{the_actor.id}")
+  end
+
+  def destroy
+    the_id = params.fetch("an_id")
+    matching_records = Actor.where({id: the_id})
+    the_actor = matching_records.at(0)
+    the_actor.destroy
+    redirect_to("/actors")
+  end
+
+
+
+  def create
+    a = Actor.new
+    a.name = params.fetch("actor_name")
+    a.dob = params.fetch("actor_dob")
+    a.bio = params.fetch("actor_bio")
+    a.image = params.fetch("the_image")
+    a.save
+    redirect_to("/actors")
+  end
+
   def show
     the_id = params.fetch("path_id")
 
     matching_actors = Actor.where({ :id => the_id })
     @the_actor = matching_actors.at(0)
+
       
     render({ :template => "actor_templates/show" })
   end
